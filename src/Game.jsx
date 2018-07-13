@@ -15,6 +15,7 @@ export class Game extends React.Component {
         xIsNext: true,
         ascendingOrder : true,
         clicked : null,
+        isDraw: false,
       };
     }
   
@@ -22,6 +23,7 @@ export class Game extends React.Component {
       const history = this.state.history.slice(0, this.state.stepNumber + 1);
       const current = history[history.length - 1];
       const squares = current.squares.slice();
+
       if (calculateWinner(squares) || squares[i]) {
         return;
       }
@@ -43,6 +45,7 @@ export class Game extends React.Component {
       this.setState({
         stepNumber: step,
         xIsNext: (step % 2) === 0,
+
       });
     }
 
@@ -51,7 +54,7 @@ export class Game extends React.Component {
         ascendingOrder: !this.state.ascendingOrder,
       })
     }
-    
+   
     render() {
       const history = this.state.history;
       const current = history[this.state.stepNumber];
@@ -61,22 +64,35 @@ export class Game extends React.Component {
       if (winner) {
         current.squares.winSquares = winner[3];
         status = "Winner: " + winner[0];
-      } else {
+      } else if(this.state.isDraw){
+        status = "It is a Draw";
+        //
+        this.setState({
+          isDraw : false,
+        })
+      }
+      else {
         status = "Next player: " + (this.state.xIsNext ? "X" : "O");
       }
-
+      //
+      if(current.squares.length == 9){
+        console.log("IT IS A DRAW");
+        this.state.isDraw = true;
+      }
+       
       const moves = history.map((step, move) => {
         let desc = 'Game Start';
         let row = null;
         let col = null;
-
+        
         if(move){
           desc = 'Move: #' + move;
           row = '(' + this.state.history[move].clicked[0]+',';
           col = this.state.history[move].clicked[1]+')';
         }
         
-        const isBold = ((this.state.stepNumber === move) ? 'bold' : '');        
+        const isBold = ((this.state.stepNumber === move) ? 'bold' : '');
+        //
         return (
           <li key={move}>
             <button 

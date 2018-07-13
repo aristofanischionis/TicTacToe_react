@@ -1,9 +1,10 @@
 import React from 'react';
+import './index.css';
 
 export function Square(props) {
-    let highlight = props.winner ? ' red' : '';
+    let red = props.winner ? ' red' : '';
     return (
-      <button className={"square"+highlight} onClick={props.onClick}>
+      <button className={"square" + red} onClick={props.onClick}>
         {props.value}
       </button>
     );
